@@ -10,7 +10,9 @@ class Player(Sprite):
         self.SPEED_ANIMATION = 0
         self.CURRENT_ANIMATION = ""
         self.COUNT_THINGS = 0
+        self.COUNT_LIFES = 5
         self.MAP_MOVE_COUNT = 0
+        self.ENEMY_COUNT = 0
         self.RECT = pygame.Rect(self.X, self.Y, self.WIDTH, self.HIGH)
     def move(self):
         if keyboard(pygame.K_RIGHT):
@@ -70,6 +72,24 @@ class Player(Sprite):
                 tile_map.delete_tile(x=thing_rect.x, y=thing_rect.y)
                 self.COUNT_THINGS += 1
                 break
+    def enemy_collision(self, enemy, hearts):
+        self.ENEMY_COUNT += 0.5 
+        if self.ENEMY_COUNT > 25:
+            if self.RECT.colliderect(enemy.RECT):
+                del hearts[-1]
+                self.COUNT_LIFES -= 1
+                self.ENEMY_COUNT = 0
+
+    def end_game(self):
+        if self.COUNT_LIFES == 0:
+            return True
+            
+    def map_exit(self, screen: pygame.Surface):
+        if self.RECT.y > screen.get_height():
+            self.X =500
+            self.RECT.x = 500
+            self.Y =100
+            self.RECT.y =100
 
     def move_map(self):
         if self.CAN_MOVE_RIGHT == True and keyboard(pygame.K_RIGHT):

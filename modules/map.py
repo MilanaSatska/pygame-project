@@ -7,16 +7,24 @@ class Map:
         self.WIDTH = self.TILEMAP.tilewidth
         self.HIGH = self.TILEMAP.tileheight
         self.MAP_MOVE = 0
-    def blit_map(self, screen, map_move):
+        self.camera_x = 0
+    def blit_map(self, screen):
         self.LAYERS = self.TILEMAP.visible_tile_layers
         for layer_id in self.LAYERS:
             #print(layer_id)
             layer = self.TILEMAP.layers[layer_id]
             for x, y, cell in layer:
                 if cell:
-                    self.MAP_MOVE = map_move
+                    #self.MAP_MOVE = map_move
                     cell_image = self.TILEMAP.get_tile_image_by_gid(cell)
-                    screen.blit(cell_image, (x*self.WIDTH - self.MAP_MOVE, y*self.HIGH))
+                    screen.blit(cell_image, (x*self.WIDTH - self.camera_x, y*self.HIGH))
+
+    def update_camera(self, player):
+        self.camera_x = player.X - 400  # 400 — половина ширины окна (центр камеры)
+        if self.camera_x < 0:
+            self.camera_x = 0
+
+
     def blit_collision(self, screen):
         self.COLLISION_LAYER = self.TILEMAP.get_layer_by_name("ground_2")
         for collision_object in self.COLLISION_LAYER:

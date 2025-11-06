@@ -1,11 +1,13 @@
 import pygame
-from .app import screen , clock, FSP
+from .app import screen, clock, FSP
 from .events import quit_game 
 from .enemy import enemy
 from .player import jery
 from .map import tile_map
 from .music import main_music
 from .fonts import thing_font
+from .enemy import enemy
+from .settings import hearts
 pygame.init()
 
 def run():
@@ -19,15 +21,17 @@ def run():
                 game = False
         screen.fill((170,216,240))
 
-        tile_map.blit_map(screen, jery.move_map())
+        tile_map.update_camera(jery)
+        tile_map.blit_map(screen)
+        #tile_map.blit_map(screen, jery.move_map())
 
         #tile_map.blit_collision(screen)
         #tile_map.blit_object_collision(screen)
         #tom.blit_image(screen)
 
         
-
-        jery.blit_image(screen)
+        jery.map_exit(screen)
+        jery.blit_image(screen, tile_map.camera_x)
         jery.move()
         jery.can_move_down(tile_map.create_collision())
         jery.can_move_left(tile_map.create_collision())
@@ -37,17 +41,20 @@ def run():
         jery.direction()
         jery.object_collision(tile_map.create_object_collision())
         #tile_map.blit_object_collision(screen)
+        jery.enemy_collision(enemy, hearts)
 
-        enemy.blit_image(screen)
+        enemy.blit_image(screen, tile_map.camera_x)
         enemy.move()
         enemy.can_move_right(tile_map.create_collision())
         enemy.can_move_down(tile_map.create_collision())
         enemy.can_move_left(tile_map.create_collision())
         enemy.can_move_up(tile_map.create_collision())
+        enemy.direction()
 
-        
+        for heart in hearts:
+            heart.blit_image(screen)
         thing_text = thing_font.render(str(jery.COUNT_THINGS), True, (140, 125, 100), (255, 255, 255))
-        screen.blit(thing_text, (100,100))
+        screen.blit(thing_text, (100,150))
         #tom.move()
         #tom.collision(jery)
         #print(jery.CAN_MOVE_DOWN)

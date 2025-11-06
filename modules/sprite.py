@@ -10,6 +10,9 @@ class Sprite(Settings):
         self.CAN_MOVE_UP = True
         self.CAN_MOVE_DOWN = True
         self.DIRECTION = ""
+
+
+    
     def can_move_down(self, map_collision):
         for block in map_collision:
             block_rect = pygame.Rect(block.x, block.y, block.width, block.height)
